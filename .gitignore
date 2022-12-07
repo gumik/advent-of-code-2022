@@ -1,0 +1,11 @@
+*.hi
+*.swp
+*.hp
+*.prof
+*.o
+run*.sh
+.stack-work/
+stack.yaml.lock
+*~
+*.lock
+.idea

@@ -1,0 +1,54 @@
+name:                advent-of-code
+version:             2022
+github:              "gumik/advent-of-code-2022"
+license:             BSD3
+author:              "Krzysztof Mataj"
+maintainer:          "krzysztof.mataj@gmail.com"
+copyright:           "2022 Krzysztof Mataj"
+
+extra-source-files:
+- README.md
+
+# Metadata used when publishing your package
+# synopsis:            Short description of your package
+# category:            Web
+
+# To avoid duplicated efforts in documentation and dealing with the
+# complications of embedding Haddock markup inside cabal files, it is
+# common to point users to the README.md file.
+description:         Please see the README on GitHub at <https://github.com/gumik/advent-of-code-2022#readme>
+
+dependencies:
+- base
+
+library:
+  source-dirs: src
+  dependencies:
+    - split
+    - containers
+    - array
+    # - mtl
+    # - monad-loops
+    - bytestring
+    - Cabal
+
+executables:
+  advent-of-code-exe:
+    main:                Main.hs
+    source-dirs:         app
+    ghc-options:
+    - -O2
+    dependencies:
+    - advent-of-code == 2022
+    - containers
+    - split
+
+tests:
+  advent-of-code-test:
+    main:                Spec.hs
+    source-dirs:         test
+    ghc-options:
+    - -O2
+    dependencies:
+    - advent-of-code == 2022
+    - HUnit
