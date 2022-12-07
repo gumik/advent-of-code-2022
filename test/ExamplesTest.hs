@@ -98,8 +98,32 @@ day06input = ["bvwbjplbgvbhsrlpgdmjqwftvncz",
 day06part1 = day06input `zip` [5, 6, 10, 11]
 day06part2 = day06input `zip` [23, 23, 29, 26]
 
-day07part1 = []
-day07part2 = []
+day07input = "$ cd /\n"
+          ++ "$ ls\n"
+          ++ "dir a\n"
+          ++ "14848514 b.txt\n"
+          ++ "8504156 c.dat\n"
+          ++ "dir d\n"
+          ++ "$ cd a\n"
+          ++ "$ ls\n"
+          ++ "dir e\n"
+          ++ "29116 f\n"
+          ++ "2557 g\n"
+          ++ "62596 h.lst\n"
+          ++ "$ cd e\n"
+          ++ "$ ls\n"
+          ++ "584 i\n"
+          ++ "$ cd ..\n"
+          ++ "$ cd ..\n"
+          ++ "$ cd d\n"
+          ++ "$ ls\n"
+          ++ "4060174 j\n"
+          ++ "8033020 d.log\n"
+          ++ "5626152 d.ext\n"
+          ++ "7214296 k\n"
+
+day07part1 = [(day07input, 95437)]
+day07part2 = [(day07input, 24933642)]
 
 day08part1 = []
 day08part2 = []
