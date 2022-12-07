@@ -91,8 +91,12 @@ day05input = "    [D]    \n"
 day05part1 = [(day05input, "CMZ")]
 day05part2 = [(day05input, "MCD")]
 
-day06part1 = []
-day06part2 = []
+day06input = ["bvwbjplbgvbhsrlpgdmjqwftvncz",
+              "nppdvjthqldpwncqszvftbrmjlhg",
+              "nznrnfrfntjfmvfwmzdfjlvtqnbhcprsg",
+              "zcfzfwzzqfrljwzlrfnpqdbhtmscgvjw"]
+day06part1 = day06input `zip` [5, 6, 10, 11]
+day06part2 = day06input `zip` [23, 23, 29, 26]
 
 day07part1 = []
 day07part2 = []
