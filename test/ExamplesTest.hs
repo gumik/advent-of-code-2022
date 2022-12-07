@@ -57,11 +57,18 @@ day01input = "1000\n" ++
 day01part1 = [(day01input, 24000)]
 day01part2 = [(day01input, 45000)]
 
-day02part1 = []
-day02part2 = []
+day02input = "A Y\nB X\nC Z\n"
+day02part1 = [(day02input, 15)]
+day02part2 = [(day02input, 12)]
 
-day03part1 = []
-day03part2 = []
+day03input = "vJrwpWtwJgWrhcsFMMfFFhFp\n"
+           ++ "jqHRNqRjqzjGDLGLrsFMfFZSrLrFZsSL\n"
+           ++ "PmmdzqPrVvPwwTWBwg\n"
+           ++ "wMqvLMZHhHMvwLHjbvcjnnSBnvTQFn\n"
+           ++ "ttgJtRGJQctTZtZT\n"
+           ++ "CrZsJsPPZsGzwwsLwLmpwMDw\n"
+day03part1 = [(day03input, 157)]
+day03part2 = [(day03input, 70)]
 
 day04part1 = []
 day04part2 = []
