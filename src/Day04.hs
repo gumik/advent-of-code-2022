@@ -7,7 +7,8 @@ solution :: Solution Int Int
 solution = Solution "day04" "" run
 
 run :: String -> (Int, Int)
-run input = let assignments = parse input in (part1 assignments, part2 assignments)
+run input = let assignments = parse input 
+    in (solve fullyContains assignments, solve overlap assignments)
 
 type Pair = (Int, Int)
 type Assignment = (Pair, Pair)
@@ -23,15 +24,11 @@ parseLine l = let
 parsePair :: String -> Pair
 parsePair s = let [a, b] = splitOn "-" s in (readNum a, readNum b)
 
-
-part1 :: [Assignment] -> Int
-part1 = length . filter (==True) . map fullyContains
+solve :: (Assignment -> Bool) -> [Assignment] -> Int
+solve containsFunc = length . filter (==True) . map containsFunc
 
 fullyContains :: Assignment -> Bool
 fullyContains ((a1, a2), (b1, b2)) = (b1 >= a1 && b2 <= a2) || (a1 >= b1 && a2 <= b2)
-
-part2 :: [Assignment] -> Int
-part2 = length . filter (==True) . map overlap
 
 overlap :: Assignment -> Bool
 overlap ((a1, a2), (b1, b2)) = a2 >= b1 && a1 <= b2

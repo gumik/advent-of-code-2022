@@ -12,7 +12,8 @@ module Common (
     inArrayBounds,
     ShowString(..),
     toTuple,
-    toTriple) where
+    toTriple,
+    setAt) where
 import Numeric (readInt)
 import Data.List.Split (splitOn, chunksOf)
 import Data.Array
@@ -75,3 +76,10 @@ toTuple _ = error "toTuple got list with length /= than 2"
 toTriple :: [a] -> (a, a, a)
 toTriple [x, y, z] = (x, y, z)
 toTriple _ = error "toTuple got list with length /= than 3"
+
+-- Returns new list with element set at specified position.
+setAt :: Int -> a -> [a] -> [a]
+setAt pos x l = let
+    before = take pos l
+    after = drop (pos + 1) l
+    in before ++ [x] ++ after

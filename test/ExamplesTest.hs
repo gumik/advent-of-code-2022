@@ -79,8 +79,17 @@ day04input = "2-4,6-8\n"
 day04part1 = [(day04input, 2)]
 day04part2 = [(day04input, 4)]
 
-day05part1 = []
-day05part2 = []
+day05input = "    [D]    \n"
+          ++ "[N] [C]    \n"
+          ++ "[Z] [M] [P]\n"
+          ++ " 1   2   3 \n"
+          ++ "\n"
+          ++ "move 1 from 2 to 1\n"
+          ++ "move 3 from 1 to 3\n"
+          ++ "move 2 from 2 to 1\n"
+          ++ "move 1 from 1 to 2\n"
+day05part1 = [(day05input, "CMZ")]
+day05part2 = [(day05input, "MCD")]
 
 day06part1 = []
 day06part2 = []
