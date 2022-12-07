@@ -70,8 +70,14 @@ day03input = "vJrwpWtwJgWrhcsFMMfFFhFp\n"
 day03part1 = [(day03input, 157)]
 day03part2 = [(day03input, 70)]
 
-day04part1 = []
-day04part2 = []
+day04input = "2-4,6-8\n"
+          ++ "2-3,4-5\n"
+          ++ "5-7,7-9\n"
+          ++ "2-8,3-7\n"
+          ++ "6-6,4-6\n"
+          ++ "2-6,4-8\n"
+day04part1 = [(day04input, 2)]
+day04part2 = [(day04input, 4)]
 
 day05part1 = []
 day05part2 = []
