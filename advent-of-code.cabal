@@ -81,6 +81,7 @@ test-suite advent-of-code-test
   type: exitcode-stdio-1.0
   main-is: Spec.hs
   other-modules:
+      Day09Test
       ExamplesTest
       InputTest
       Paths_advent_of_code

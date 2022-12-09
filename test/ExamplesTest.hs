@@ -125,11 +125,32 @@ day07input = "$ cd /\n"
 day07part1 = [(day07input, 95437)]
 day07part2 = [(day07input, 24933642)]
 
-day08part1 = []
-day08part2 = []
+day08input = "30373\n"
+          ++ "25512\n"
+          ++ "65332\n"
+          ++ "33549\n"
+          ++ "35390\n"
+day08part1 = [(day08input, 21)]
+day08part2 = [(day08input, 8)]
 
-day09part1 = []
-day09part2 = []
+day09input = "R 4\n"
+          ++ "U 4\n"
+          ++ "L 3\n"
+          ++ "D 1\n"
+          ++ "R 4\n"
+          ++ "D 1\n"
+          ++ "L 5\n"
+          ++ "R 2\n"
+day09part1 = [(day09input, 13)]
+day09input2 = "R 5\n"
+           ++ "U 8\n"
+           ++ "L 8\n"
+           ++ "D 3\n"
+           ++ "R 17\n"
+           ++ "D 10\n"
+           ++ "L 25\n"
+           ++ "U 20\n"
+day09part2 = [(day09input2, 36)]
 
 day10part1 = []
 day10part2 = []

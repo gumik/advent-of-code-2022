@@ -13,10 +13,11 @@ module Common (
     ShowString(..),
     toTuple,
     toTriple,
-    setAt) where
+    setAt,
+    range) where
 import Numeric (readInt)
 import Data.List.Split (splitOn, chunksOf)
-import Data.Array
+import Data.Array hiding (range)
 
 data Solution a b = Solution {
     solutionName :: String,
@@ -83,3 +84,8 @@ setAt pos x l = let
     before = take pos l
     after = drop (pos + 1) l
     in before ++ [x] ++ after
+
+range :: Int -> Int -> [Int]
+range begin end
+    | begin == end  = [begin]
+    | otherwise     = [begin, begin + signum (end - begin) .. end]
