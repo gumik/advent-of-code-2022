@@ -29,7 +29,7 @@ data NoSolution = NoSolution deriving (Eq)
 instance Show NoSolution where
     show NoSolution = "(no solution)"
 
-newtype ShowString = ShowString String
+newtype ShowString = ShowString String deriving(Eq)
 instance Show ShowString where
     show (ShowString s) = s
 

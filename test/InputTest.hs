@@ -1,6 +1,6 @@
 module InputTest where
 import Test.HUnit (test, Test(TestLabel, TestCase), assertEqual)
-import Common (Solution(solutionRun, solutionName), NoSolution(..))
+import Common (Solution(solutionRun, solutionName), NoSolution(..), ShowString(..))
 import qualified Day01
 import qualified Day02
 import qualified Day03
@@ -42,7 +42,13 @@ tests = TestLabel "InputTest" $ test
     , inputTest Day07.solution (1243729, 4443914)
     , inputTest Day08.solution (1676, 313200)
     , inputTest Day09.solution (5930, 2443)
-    , inputTest Day10.solution (NoSolution, NoSolution)
+    , inputTest Day10.solution (12460, ShowString $ "#### #### #### ###  ###   ##  #  # #    \n"
+                                                 ++ "#       # #    #  # #  # #  # # #  #    \n"
+                                                 ++ "###    #  ###  #  # #  # #  # ##   #    \n"
+                                                 ++ "#     #   #    ###  ###  #### # #  #    \n"
+                                                 ++ "#    #    #    #    # #  #  # # #  #    \n"
+                                                 ++ "#### #### #    #    #  # #  # #  # #### ")
+
     , inputTest Day11.solution (NoSolution, NoSolution)
     , inputTest Day12.solution (NoSolution, NoSolution)
     , inputTest Day13.solution (NoSolution, NoSolution)
