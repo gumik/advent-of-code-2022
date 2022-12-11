@@ -49,7 +49,7 @@ tests = TestLabel "InputTest" $ test
                                                  ++ "#    #    #    #    # #  #  # # #  #    \n"
                                                  ++ "#### #### #    #    #  # #  # #  # #### ")
 
-    , inputTest Day11.solution (NoSolution, NoSolution)
+    , inputTest Day11.solution (58056, 0)
     , inputTest Day12.solution (NoSolution, NoSolution)
     , inputTest Day13.solution (NoSolution, NoSolution)
     , inputTest Day14.solution (NoSolution, NoSolution)

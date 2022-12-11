@@ -38,6 +38,8 @@ executables:
     source-dirs:         app
     ghc-options:
     - -O2
+    # - -rtsopts
+    # - -prof
     dependencies:
     - advent-of-code == 2022
     - containers
