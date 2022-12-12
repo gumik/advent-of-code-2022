@@ -5,6 +5,7 @@ import Common (Solution(Solution), NoSolution(..), readNum, setAt)
 import Data.List.Split (splitOn)
 import Prelude hiding (round)
 import Data.List (transpose, sort, foldl', iterate')
+import Debug.Trace (trace)
 
 solution = Solution "day11" "" run
 
@@ -15,14 +16,44 @@ run input = let
 data Monkey = Monkey { monkeyItems :: [Item]
                      , monkeyOperation :: Operation
                      , monkeyTest :: Test
-                     , monkeyAction :: Action 
+                     , monkeyAction :: Action
                      , monkeyProcessed :: Int}
 
-type Item =  Int
+type Item =  ModInt
 data Operation = Add Int | Multiply Int | Square  deriving (Show)
 type Test =  Int
 type Action = (Int, Int)
 
+bases :: [Int]
+bases = [2, 3, 5, 7, 11, 13, 17, 19, 23]
+newtype ModInt = ModInt [Int]
+
+modIntList :: ModInt -> [Int]
+modIntList (ModInt x) = x
+
+toModInt :: Int -> ModInt
+toModInt x = ModInt $ map (x `mod`) bases
+
+isDivisible :: ModInt -> Int -> Bool
+isDivisible n x = remainder == 0 where
+    remainder = modIntList n !! baseIdx x
+
+modIntAdd :: ModInt -> Int -> ModInt
+modIntAdd n x = ModInt $ zipWith addRemainder bases (modIntList n) where
+    addRemainder b r = (r + x) `mod` b
+
+modIntMultiply :: ModInt -> Int -> ModInt
+modIntMultiply n x = modIntMultiply' n (toModInt x)
+
+modIntMultiply' :: ModInt -> ModInt -> ModInt
+modIntMultiply' n m = ModInt $ map mult $ zip3 bases (modIntList n) (modIntList m) where
+    mult (b, n', m') = (n' * m') `mod` b
+
+modIntSquare :: ModInt -> ModInt
+modIntSquare n = modIntMultiply' n n
+
+baseIdx :: Int -> Int
+baseIdx x = fst $ head $ filter ((== x) . snd) $ [0..] `zip` bases
 
 parse :: String -> [Monkey]
 parse = map parseMonkey . splitOn "\n\n"
@@ -37,7 +68,7 @@ parseMonkey input = let
               0
 
 parseStartingItems :: String -> [Item]
-parseStartingItems = map readNum . splitOn "," . tail . dropWhile (/= ':')
+parseStartingItems = map (toModInt . readNum) . splitOn "," . tail . dropWhile (/= ':')
 
 parseOperation :: String -> Operation
 parseOperation str = let
@@ -60,10 +91,10 @@ parseAction = readLastNum
 readLastNum :: String -> Int
 readLastNum = readNum . last . words
 
-
+-- TODO: Part 2 is brutally applied over part 1. Please fix me and make one code.
 part1 monkeys = let
-    rounds = take 21 $ iterate' round monkeys
-    counts = reverse $ sort $ last $ map (map monkeyProcessed) rounds
+    r = iterate' round monkeys !! 10000
+    counts = reverse $ sort $ map monkeyProcessed r
     in product $ take 2 counts
 
 round :: [Monkey] -> [Monkey]
@@ -86,16 +117,16 @@ turn (Monkey !items !operation !test !action !_) = map (monkeyTurn operation tes
 
 monkeyTurn :: Operation -> Test -> Action -> Item -> (Int, Item)
 monkeyTurn !operation !test !action !item = let
-    !worryLevel = applyOperation operation item `div` 3
-    in if worryLevel `mod` test == 0
+    !worryLevel = applyOperation operation item
+    in if isDivisible worryLevel test
         then (fst action, worryLevel)
         else (snd action, worryLevel)
 
-applyOperation :: Operation -> Int -> Int
+applyOperation :: Operation -> ModInt -> ModInt
 applyOperation op x = case op of
-  Add n -> x + n
-  Multiply n -> x * n
-  Square -> x * x
+  Add n -> modIntAdd x n
+  Multiply n -> modIntMultiply x n
+  Square -> modIntSquare x
 
 addItem :: Monkey -> Item -> Monkey
 addItem !monkey !item = let
