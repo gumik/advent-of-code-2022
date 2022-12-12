@@ -60,11 +60,17 @@ parseArray readChar input = let
     height = length parsedLines
     in listArray ((0, 0), (height-1, width-1)) $ concat parsedLines
 
-showArray :: (Show a) => Array (Int, Int) a -> String
-showArray arr = let
+showCharArray :: (Show a) => Array (Int, Int) a -> String
+showCharArray arr = let
     ((_, w1), (_, w2)) = bounds arr
     width = w2 - w1 + 1
     in unlines $ chunksOf width $ concatMap show $ elems arr
+
+showArray :: (a -> String) -> Array (Int, Int) a -> String
+showArray showFunc arr = let
+    ((_, w1), (_, w2)) = bounds arr
+    width = w2 - w1 + 1
+    in unlines $ map concat $ chunksOf width $ map showFunc $ elems arr
 
 inArrayBounds arr (y, x) = let
     ((h0, w0), (hm, wm)) = bounds arr

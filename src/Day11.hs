@@ -11,7 +11,7 @@ solution = Solution "day11" "" run
 
 run input = let
     monkeys = parse input
-    in (part1 monkeys, 0)
+    in (0, part1 monkeys)
 
 data Monkey = Monkey { monkeyItems :: [Item]
                      , monkeyOperation :: Operation
@@ -92,6 +92,11 @@ readLastNum :: String -> Int
 readLastNum = readNum . last . words
 
 -- TODO: Part 2 is brutally applied over part 1. Please fix me and make one code.
+-- The idea for part 2 is to instead of store whole numbers (for items worry level), store only the number in modulo groups.
+-- The bases for groups are prime numbers for which tests from input (eg. "Test: divisible by 7") are performed.
+-- The reasoning for this is because in 10000 iterations the numbers would grow so much that it will be impossible
+-- to fit them in memory.
+
 part1 monkeys = let
     r = iterate' round monkeys !! 10000
     counts = reverse $ sort $ map monkeyProcessed r

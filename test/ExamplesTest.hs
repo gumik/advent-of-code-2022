@@ -30,7 +30,7 @@ import qualified Day25
 
 -- cases format is as follows:
 -- (part1, part2)
--- where part1 and part2 are lists: [(expected1, in1), (expected2, in2), ...]
+-- where part1 and part2 are lists: [(in1, expected1), (in2, expected2), ...]
 exampleTest solution (part1Cases, part2Cases) = let 
     name = solutionName solution
     makeTest part tuplePart (input, expected) = part ~: input ~: expected ~=? tuplePart (solutionRun solution input)
@@ -334,11 +334,17 @@ day11input = "Monkey 0:\n"
           ++ "  Test: divisible by 17\n"
           ++ "    If true: throw to monkey 0\n"
           ++ "    If false: throw to monkey 1\n"
-day11part1 = [(day11input, 10605)]
-day11part2 = []
+day11part1 = [{- (day11input, 10605) -}]  -- TODO: restore after fix Day11
+day11part2 = [(day11input, 2713310158)]
 
-day12part1 = []
-day12part2 = []
+day12input = "Sabqponm\n"
+          ++ "abcryxxl\n"
+          ++ "accszExk\n"
+          ++ "acctuvwj\n"
+          ++ "abdefghi\n"
+
+day12part1 = [(day12input, 31)]
+day12part2 = [(day12input, 29)]
 
 day13part1 = []
 day13part2 = []

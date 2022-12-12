@@ -31,6 +31,7 @@ library:
     # - monad-loops
     - bytestring
     - Cabal
+    - PSQueue
 
 executables:
   advent-of-code-exe:
