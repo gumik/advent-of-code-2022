@@ -50,8 +50,8 @@ tests = TestLabel "InputTest" $ test
                                                  ++ "#### #### #    #    #  # #  # #  # #### ")
 
     , inputTest Day11.solution ({-58056-} 0, 15048718170)  -- TODO: Restore after Day11 fix
-    , inputTest Day12.solution (339, 0)
-    , inputTest Day13.solution (NoSolution, NoSolution)
+    , inputTest Day12.solution (339, 332)
+    , inputTest Day13.solution (5684, 22932)
     , inputTest Day14.solution (NoSolution, NoSolution)
     , inputTest Day15.solution (NoSolution, NoSolution)
     , inputTest Day16.solution (NoSolution, NoSolution)

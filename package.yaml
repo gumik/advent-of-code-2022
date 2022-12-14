@@ -27,7 +27,7 @@ library:
     - split
     - containers
     - array
-    # - mtl
+    - mtl
     # - monad-loops
     - bytestring
     - Cabal
