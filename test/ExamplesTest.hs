@@ -372,8 +372,10 @@ day13input = "[1,1,3,1,1]\n"
 day13part1 = [(day13input, 13)]
 day13part2 = [(day13input, 140)]
 
-day14part1 = []
-day14part2 = []
+day14input = "498,4 -> 498,6 -> 496,6\n"
+          ++ "503,4 -> 502,4 -> 502,9 -> 494,9\n"
+day14part1 = [(day14input, 24)]
+day14part2 = [(day14input, 93)]
 
 day15part1 = []
 day15part2 = []
