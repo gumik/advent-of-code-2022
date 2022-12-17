@@ -5,7 +5,7 @@ import Prelude hiding (Left, Right)
 import Debug.Trace (traceShow, trace)
 import qualified Data.Set as Set
 import Data.List (unfoldr)
-import Data.Maybe (maybe)
+import Data.Maybe (fromJust, isNothing)
 
 solution = Solution "day17" "" run
 
@@ -31,32 +31,31 @@ rocks = [ [(0, 0), (1, 0), (2, 0), (3, 0)]
         , [(2, 0), (2, 1), (0, 2), (1, 2), (2, 2)]
         , [(0, 0), (0, 1), (0, 2), (0, 3)]
         , [(0, 0), (1, 0), (0, 1), (1, 1)] ]
- 
+
 type Board = Set.Set Point
 
 simulateRock :: Board -> [Move] -> Rock -> (Board, [Move])
 simulateRock board moves rock = let
-    rockPositions = unfoldr (simulateRockStep board) (rock, moves)  -- map (simulateRockStep board rock) moves
-    moveLen = length $ takeWhile (uncurry (/=)) $ zip rockPositions rockPositions
-    rock' = rockPositions !! moveLen
+    (rock', moves') = simulateRockStep board rock moves
     board' = foldr Set.insert board rock'
-    moves' = drop moveLen moves
-    in trace ("rockPositions: " ++ show rockPositions) (board', moves')
+    in (board', moves')
 
 -- data Iteration = Iteration Rock [Move] | StopIteration
 
 simulateRockStep :: Board -> Rock -> [Move] -> (Rock, [Move])
-simulateRockStep board rock moves = do
-    rockPushed <- pushRock board (head moves) rock
-    rockFallenDown <- maybefallDownRock board rockPushed
-    if rock /= rockFallenDown then Just (rockFallenDown, (rockFallenDown, tail moves)) else Nothing
+simulateRockStep board rock moves = let
+    rockPushed = pushRock board (head moves) rock
+    rockFallenDown = fallDownRock board rockPushed
+    in if isNothing rockFallenDown
+        then (rockPushed, tail moves)
+        else simulateRockStep board (fromJust rockFallenDown) (tail moves)
 
-pushRock :: Board -> Move -> Rock -> Maybe Rock
+pushRock :: Board -> Move -> Rock -> Rock
 pushRock board move rock = let
     rock' = case move of
         Left -> map (\(x, y) -> (x - 1, y)) rock
         Right -> map (\(x, y) -> (x + 1, y)) rock
-    in if any (\(x, y) -> x < 0 || x > 6 || (x, y) `Set.member` board) rock' then Nothing else Just rock'
+    in if any (\(x, y) -> x < 0 || x > 6 || (x, y) `Set.member` board) rock' then rock else rock'
 
 fallDownRock :: Board -> Rock -> Maybe Rock
 fallDownRock board rock = let
