@@ -9,6 +9,7 @@ module Common (
     toDecimal,
     parseArray,
     showArray,
+    showCharArray,
     inArrayBounds,
     ShowString(..),
     toTuple,
