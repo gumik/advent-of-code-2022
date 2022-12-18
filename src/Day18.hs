@@ -12,4 +12,4 @@ run input = let
 
 parse = map parseLine . lines
 
-parseLine = toTriple . map readNum . splitOn "\n"
+parseLine = toTriple . map readNum . splitOn ","
