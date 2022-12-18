@@ -10,6 +10,6 @@ run input = let
     cubes = parse input
     in traceShow cubes (NoSolution, NoSolution)
 
-parse = map parseLine lines
+parse = map parseLine . lines
 
 parseLine = toTriple . map readNum . splitOn "\n"
