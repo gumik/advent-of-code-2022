@@ -8,7 +8,7 @@ solution = Solution "day15" "" run
 
 run input = let
     pairs = parse input
-    in traceShow pairs (part1 pairs, part2 pairs)
+    in {- traceShow pairs -} (part1 pairs, part2 pairs)
 
 type Point = (Int, Int)
 type SensorBeacon = (Point, Point)
@@ -33,7 +33,7 @@ part1 l = let
     rightBound = maximum $ map (\(Sensor (x, _) coverage) -> x + coverage) sensors
     lineCoord = 2000000
     coverageOnLine = length $ filter id [coveredByAnySensor sensors (x, lineCoord) | x <- [leftBound..rightBound], (x, lineCoord) `notElem` beacons]
-    in traceShow (leftBound, rightBound) coverageOnLine
+    in {- traceShow (leftBound, rightBound) -} coverageOnLine
 
 data Sensor = Sensor { sensorPos :: Point, sensorCoverage :: Int }  deriving (Show)
 
@@ -79,7 +79,7 @@ part2 l = let
     downBound = maximum $ map snd $ concatMap (\(p1, p2) -> [p1, p2]) rotated
     segments = map (\((x1, y1), (x2, y2)) -> Segment x1 x2 [Segment y1 y2 [Unit]]) rotated
     xxx = foldl remove [Segment leftBound rightBound [Segment upBound downBound [Unit]]] segments
-    in traceShow xxx $ tuningFrequency (3135800,2766584)
+    in {- traceShow xxx $ -} tuningFrequency (3135800,2766584)
 
 {- Based on this debug easily found manually:
    Segment 5902383 5902385 [Segment (-4891148) (-3061323) [Unit],Segment (-369217) (-369215) [Unit],Segment 3293187 4393282 [Unit]],

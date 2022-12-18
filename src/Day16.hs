@@ -8,7 +8,7 @@ solution = Solution "day16" "" run
 
 run input = let
     valves = parse input
-    in traceShow valves (NoSolution, NoSolution)
+    in {- traceShow valves -} (NoSolution, NoSolution)
 
 data Valve = Valve String Int [String] deriving (Show)
 
