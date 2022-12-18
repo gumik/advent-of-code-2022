@@ -414,7 +414,7 @@ day18input = "2,2,2\n"
           ++ "2,1,5\n"
           ++ "2,3,5\n"
 day18part1 = [(day18input, 64)]
-day18part2 = []
+day18part2 = [(day18input, 58)]
 
 day19part1 = []
 day19part2 = []
