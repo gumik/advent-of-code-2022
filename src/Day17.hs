@@ -1,17 +1,18 @@
 module Day17 where
 
-import Common (Solution(Solution), NoSolution(..), readNum)
+import Common (Solution(Solution), NoSolution(..), readNum, showArray)
 import Prelude hiding (Left, Right)
 import Debug.Trace (traceShow, trace)
 import qualified Data.Set as Set
 import Data.List (unfoldr)
 import Data.Maybe (fromJust, isNothing)
+import Data.Array (array)
 
 solution = Solution "day17" "" run
 
 run input = let
     moves = parse input
-    in traceShow moves (0, NoSolution)
+    in (part1 moves, NoSolution)
 
 data Move = Left | Right deriving (Show)
 
@@ -25,29 +26,48 @@ parse = map toMove . filter (`elem`"><") where
 type Point = (Int, Int)
 type Rock = [Point]
 
-rocks :: [Rock]  -- FIXME: positive y is up, not down
-rocks = [ [(0, 0), (1, 0), (2, 0), (3, 0)]
-        , [(1, 0), (0, 1), (2, 1), (1, 2)]
-        , [(2, 0), (2, 1), (0, 2), (1, 2), (2, 2)]
-        , [(0, 0), (0, 1), (0, 2), (0, 3)]
-        , [(0, 0), (1, 0), (0, 1), (1, 1)] ]
+part1 :: [Move] -> Int
+part1 moves = let
+    finalBoard = simulateRocks 2022 Set.empty (cycle moves) (cycle rocks)
+    in 1 + maximum (map snd $ Set.toList finalBoard)
+
+showBoard :: Board -> String
+showBoard board = let
+    points = Set.toList board
+    height = maximum $ map snd points
+    in (showArray id $ array ((0, 0), (height, 6)) $ [((y, x), " ") | x <- [0..6], y <- [0..height]] ++ [((height-y, x), "#") | (x, y) <- points])
+        ++ "-------\n"
+
+rocks :: [Rock]  -- Left side two points away from left edge, bottom is at level 0.
+rocks = [ [(2, 0), (3, 0), (4, 0), (5, 0)]
+        , [(3, 0), (2, 1), (4, 1), (3, 2)]
+        , [(2, 0), (3, 0), (4, 0), (4, 1), (4, 2)]
+        , [(2, 0), (2, 1), (2, 2), (2, 3)]
+        , [(2, 0), (3, 0), (2, 1), (3, 1)] ]
 
 type Board = Set.Set Point
 
+simulateRocks :: Int -> Board -> [Move] -> [Rock] -> Board
+simulateRocks 0 board _ _ = board
+simulateRocks n board moves rocks = let
+    top = maximum $ ((-1):) $ map snd $ Set.toList board
+    rock = rockToTop (head rocks) top
+    (board', moves') = simulateRock board moves rock
+    in simulateRocks (n-1) board' moves' (tail rocks)
+
+rockToTop :: Rock -> Int -> Rock
+rockToTop rock n = map (\(x, y) -> (x, y + n + 4)) rock
+
 simulateRock :: Board -> [Move] -> Rock -> (Board, [Move])
-simulateRock board moves rock = let
-    (rock', moves') = simulateRockStep board rock moves
-    board' = foldr Set.insert board rock'
-    in (board', moves')
+simulateRock board moves rock = (board', moves') where
+    (board', rock', moves') = simulateRockStep board rock moves
 
--- data Iteration = Iteration Rock [Move] | StopIteration
-
-simulateRockStep :: Board -> Rock -> [Move] -> (Rock, [Move])
+simulateRockStep :: Board -> Rock -> [Move] -> (Board, Rock, [Move])
 simulateRockStep board rock moves = let
     rockPushed = pushRock board (head moves) rock
     rockFallenDown = fallDownRock board rockPushed
     in if isNothing rockFallenDown
-        then (rockPushed, tail moves)
+        then (foldr Set.insert board rockPushed, rockPushed, tail moves)
         else simulateRockStep board (fromJust rockFallenDown) (tail moves)
 
 pushRock :: Board -> Move -> Rock -> Rock
