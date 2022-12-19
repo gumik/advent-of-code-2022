@@ -57,7 +57,7 @@ range cubes = let
 waterPoints :: Scan -> (Int, Int, Int, Int, Int, Int) -> [Cube] -> Scan -> Scan
 waterPoints _ _ [] water = water
 waterPoints scan ranges@(minX, maxX, minY, maxY, minZ, maxZ) (cube@(x, y, z):rest) water
-    | x < minX || x > maxX || y < minY || y > maxY || z < minY || z > maxY || cube `Set.member` water || cube `Set.member` scan  = waterPoints scan ranges rest water
+    | x < minX || x > maxX || y < minY || y > maxY || z < minZ || z > maxZ || cube `Set.member` water || cube `Set.member` scan  = waterPoints scan ranges rest water
     | otherwise  = waterPoints scan ranges (neighbours cube ++ rest) (cube `Set.insert` water)
 
 visibleSides' :: Scan -> Cube -> Int
