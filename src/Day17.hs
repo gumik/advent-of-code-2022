@@ -28,7 +28,7 @@ type Rock = [Point]
 
 part1 :: [Move] -> Int
 part1 moves = let
-    finalBoard = simulateRocks 2022 Set.empty (cycle moves) (cycle rocks)
+    (finalBoard, _, _) = iterate simulateRocks (Set.empty, cycle moves, cycle rocks) !! 2022
     in 1 + maximum (map snd $ Set.toList finalBoard)
 
 showBoard :: Board -> String
@@ -47,13 +47,12 @@ rocks = [ [(2, 0), (3, 0), (4, 0), (5, 0)]
 
 type Board = Set.Set Point
 
-simulateRocks :: Int -> Board -> [Move] -> [Rock] -> Board
-simulateRocks 0 board _ _ = board
-simulateRocks n board moves rocks = let
+simulateRocks :: (Board, [Move], [Rock]) -> (Board, [Move], [Rock])
+simulateRocks (board, moves, rocks) = let
     top = maximum $ ((-1):) $ map snd $ Set.toList board
     rock = rockToTop (head rocks) top
     (board', moves') = simulateRock board moves rock
-    in simulateRocks (n-1) board' moves' (tail rocks)
+    in  (board', moves', tail rocks)
 
 rockToTop :: Rock -> Int -> Rock
 rockToTop rock n = map (\(x, y) -> (x, y + n + 4)) rock

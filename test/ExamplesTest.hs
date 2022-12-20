@@ -419,8 +419,15 @@ day18part2 = [(day18input, 58)]
 day19part1 = []
 day19part2 = []
 
-day20part1 = []
-day20part2 = []
+day20input = "1\n"
+          ++ "2\n"
+          ++ "-3\n"
+          ++ "3\n"
+          ++ "-2\n"
+          ++ "0\n"
+          ++ "4\n"
+day20part1 = [(day20input, 3)]
+day20part2 = [(day20input, 1623178306)]
 
 day21part1 = []
 day21part2 = []
