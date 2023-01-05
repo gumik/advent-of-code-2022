@@ -8,6 +8,77 @@ import Debug.Trace (traceShow, trace)
 import Data.Array (Array, bounds, (!))
 import Prelude hiding (Left, Right)
 
+{-
+The idea is to split input map into 6 square maps. Then do mapping for each map/edge.
+For example, having input map:
+
+   ...
+   ...
+   ...
+............
+............
+............
+   ...
+   ...
+   ...
+
+Such 6 individual maps may be created (arranged as in input):
+
+      +---+
+      | 1 |
+      +---+
++---+ +---+ +---+ +---+ 
+| 2 | | 3 | | 4 | | 5 |
++---+ +---+ +---+ +---+
+      +---+
+      | 6 |
+      +---+
+
+Then mapping is of form:
+
+(map, side) -> (destination map, destination side, rotation)
+
+where side is U, D, L, R for Up, Down Left, Right
+and rotation is number of how much clockwise turns are needed to have correct facing in destination map.
+
+There are obvious starting mappings for neighbouring maps:
+
+(1, D) -> (3, U, 0)
+(2, R) -> (3, L, 0)
+(3, L) -> (2, R, 0)
+(3, U) -> (1, D, 0)
+(3, R) -> (4, L, 0)
+(3, D) -> (6, U, 0)
+(4, L) -> (3, R, 0)
+(4, R) -> (5, L, 0)
+(5, L) -> (4, R, 0)
+(6, U) -> (3, D, 0)
+
+There are always 10 such mappings, but they may differ depending on input map arrangement.
+From such mappings rest 14 mappings may be found in the following way:
+
+1. To find mapping in map X on side Y
+2. Go to map from side clockwise from Y. Call it map X' and side Y'.
+3. Go to map from side clockwise from Y'. Call it map X" and side Y".
+4. Destination side is clockwise from Y". The rotation is (-3 - rot1 - rot2 mod 4), where rot1 and rot2 are rotations from mapping in steps 2 and 3.
+5. The opposite mapping is (X, Y, -rotation mod 4)
+
+For example, find mapping for (4, D).
+
+    (4, D) -> (4, L) -> (3, R, 0) -> 
+              (3, D) -> (6, U, 0) -> (6, R)
+    
+    Rotation is -3 - 0 - 0 mod 4 = 1.
+    So, final mapping is:
+
+    (4, D) -> (6, R, 1)
+
+    Opposite mapping is:
+
+    (6, R) -> (4, D, 3)
+
+-}
+
 solution = Solution "day22" "" run
 
 run input = let
@@ -41,38 +112,21 @@ parsePath str@(x:xs) = case x of
 
 
 part1 :: ForceField -> Path -> Int
-part1 forceField path = let
-    moves = goPath forceField path
-    ((y, x), facing) = last moves
-    in traceShow moves $ 1000 * (y+1) + 4 * (x+1) + fromEnum facing
+part1 forceField path = 1000 * (y+1) + 4 * (x+1) + fromEnum facing where
+    ((y, x), facing) = last $ goPath forceField path
 
 type Point = (Int, Int)
 data Facing = Right | Down | Left | Up  deriving (Show, Enum)
 
 goPath :: ForceField -> Path -> [(Point, Facing)]
-goPath forceField path = let
-    ((minX, minY), (maxX, maxY)) = bounds forceField
-    --initialPosX = minimum [x | x <- [minX..maxX], forceField ! (0, x) /= None]
-    in scanl (move forceField) ((0, 0), Right) path
+goPath forceField = scanl (move forceField) ((0, 0), Right)
 
 move :: ForceField -> (Point, Facing) -> Instruction -> ((Int, Int), Facing)
 move _ (pos, facing) (Turn rotation) = (pos, rotate rotation facing)
 move forceField (pos, facing) (Move n) = (lastPos, facing) where
     nextPositions = iterate (advance forceField facing) pos
-    counter = scanl count n nextPositions
-    count n pos = trace ("n == " ++ show n ++ ", forceField ! " ++ show pos ++ " == " ++ show (forceField ! pos)) $ case forceField ! pos of
-        None  -> n
-        Empty -> n-1
-        Wall  -> -1
-    lastPos = fst $ last $ takeWhile (\(pos, n) -> n >= 0 && forceField ! pos /= Wall) $ filter ((/= None) . (forceField !) . fst) $ nextPositions `zip` counter
-    
-    -- case n of
-    -- 0 -> (pos, facing)
-    -- _ -> let nextPos = advance forceField pos facing
-    --     in case forceField ! nextPos of
-    --         None  -> move forceField (nextPos, facing) (Move n)
-    --         Empty -> move forceField (nextPos, facing) (Move (n-1))
-    --         Wall  -> (pos, facing)
+    positionsTypes = map (forceField !) nextPositions
+    lastPos = fst $ last $ takeWhile ((/= Wall) . snd) $ take (n+1) $ filter ((/= None) . snd) (nextPositions `zip` positionsTypes)
 
 advance :: ForceField -> Facing -> Point -> Point
 advance forceField facing (y, x) = (y' `mod` (maxY+1), x' `mod` (maxX+1)) where
@@ -88,4 +142,3 @@ rotate rotation facing = toEnum $ (fromEnum facing + dir) `mod` 4 where
     dir = case rotation of
         Clockwise        ->  1
         CounterClockwise -> -1
-
