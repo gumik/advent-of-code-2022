@@ -57,9 +57,11 @@ toDecimal nary digits = sum $ zipWith (\d c -> d * nary^c) (reverse digits) [0..
 parseArray :: (Char -> a) -> String -> Array (Int, Int) a
 parseArray readChar input = let
     parsedLines = map (map readChar) $ lines input
-    width = length $ head parsedLines
+    width = maximum $ map length parsedLines
     height = length parsedLines
-    in listArray ((0, 0), (height-1, width-1)) $ concat parsedLines
+    -- In case some lines are shorter, extend them with space.
+    extendedLines = map (\l -> l ++ replicate (width - length l) (readChar ' ')) parsedLines
+    in listArray ((0, 0), (height-1, width-1)) $ concat extendedLines
 
 showCharArray :: (Show a) => Array (Int, Int) a -> String
 showCharArray arr = let
