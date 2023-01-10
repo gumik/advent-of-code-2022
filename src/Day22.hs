@@ -1,12 +1,13 @@
 {-# LANGUAGE LambdaCase #-}
 module Day22 ( solution ) where
 
-import Common (Solution(Solution), NoSolution(..), readNum, parseArray, showArray, inArrayBounds)
+import Common (Solution(Solution), NoSolution(..), readNum, parseArray, showArray, inArrayBounds, subArray)
 import Data.List.Split (splitOn)
 import Data.Char (isNumber)
 import Debug.Trace (traceShow, trace)
-import Data.Array (Array, bounds, (!))
+import Data.Array (Array, bounds, (!), elems)
 import Prelude hiding (Left, Right)
+import Data.List (nub, sort)
 
 {-
 The idea is to split input map into 6 square maps. Then do mapping for each map/edge.
@@ -77,19 +78,25 @@ For example, find mapping for (4, D).
 
     (6, R) -> (4, D, 3)
 
+Uh. Is rotation in mapping really needed? If there is mapping R -> D it is known that one clockwise turn is needed.
+
 -}
 
 solution = Solution "day22" "" run
 
 run input = let
     (forceField, path) = parseInput input
-    in (part1 forceField path, NoSolution)
+    in (part1 forceField path, part2 forceField path)
 
 type ForceField = Array (Int, Int) Field
 type Path = [Instruction]
 data Instruction = Move Int | Turn Rotation  deriving (Show)
 data Rotation = Clockwise | CounterClockwise  deriving (Show)
 data Field = None | Empty | Wall  deriving (Show, Eq)
+
+data SquareField = SquareField {
+    squareFieldOffset :: Point,
+    squareFieldForceField :: ForceField }
 
 parseInput :: String -> (ForceField, Path)
 parseInput input = let
@@ -110,10 +117,34 @@ parsePath str@(x:xs) = case x of
     _   -> Move (read numStr) : parsePath xs where
         (numStr, xs) = span isNumber str
 
+toSquareFields :: ForceField -> [SquareField]
+toSquareFields forceField = let
+    ((minY, minX), (maxY, maxX)) = bounds forceField
+    edgeCoords = sort $ nub $ [x | y <- [minY..maxY-1], x <- [minX..maxX-1], isEdge forceField (y, x) (y, x+1)]
+    squareSize = head $ zipWith (-) (tail edgeCoords) edgeCoords
+    squaresPositions = [(y, x) | y <- [minY, minY+squareSize .. maxY], x <- [minX, minX + squareSize .. maxX]]
+    squares = [SquareField (y, x) $ subArray forceField ((y, x), (y + squareSize - 1, x + squareSize - 1)) | (y, x) <- squaresPositions]
+    nonEmptySquares = filter ((/=None) . head . elems . squareFieldForceField) squares
+    in traceShow (map squareFieldOffset nonEmptySquares) nonEmptySquares
+    -- find horizontal and vertical coordinates to split
+    -- divide whole space to SquareFields
+    -- filter out the ones that contains Empty only
+
+isEdge :: ForceField -> Point -> Point -> Bool
+isEdge forceField a b = case (forceField ! a, forceField ! b) of
+    (None, None) -> False
+    (_, None)    -> True
+    (None, _)    -> True
+    _            -> False
 
 part1 :: ForceField -> Path -> Int
 part1 forceField path = 1000 * (y+1) + 4 * (x+1) + fromEnum facing where
     ((y, x), facing) = last $ goPath forceField path
+
+part2 :: ForceField -> Path -> Int
+part2 forceField path = let
+    squareFields = toSquareFields forceField
+    in length squareFields
 
 type Point = (Int, Int)
 data Facing = Right | Down | Left | Up  deriving (Show, Enum)

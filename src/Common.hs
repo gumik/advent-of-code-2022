@@ -15,7 +15,9 @@ module Common (
     toTuple,
     toTriple,
     setAt,
-    range) where
+    range,
+    arrayGetOr,
+    subArray) where
 import Numeric (readInt)
 import Data.List.Split (splitOn, chunksOf)
 import Data.Array hiding (range)
@@ -63,17 +65,25 @@ parseArray readChar input = let
     extendedLines = map (\l -> l ++ replicate (width - length l) (readChar ' ')) parsedLines
     in listArray ((0, 0), (height-1, width-1)) $ concat extendedLines
 
-showCharArray :: (Show a) => Array (Int, Int) a -> String
+showCharArray :: Array (Int, Int) Char -> String
 showCharArray arr = let
     ((_, w1), (_, w2)) = bounds arr
     width = w2 - w1 + 1
-    in unlines $ chunksOf width $ concatMap show $ elems arr
+    in unlines $ chunksOf width $ elems arr
 
 showArray :: (a -> String) -> Array (Int, Int) a -> String
 showArray showFunc arr = let
     ((_, w1), (_, w2)) = bounds arr
     width = w2 - w1 + 1
     in unlines $ map concat $ chunksOf width $ map showFunc $ elems arr
+
+arrayGetOr :: Array (Int, Int) a -> (Int, Int) -> a -> a
+arrayGetOr arr idx def
+    | inArrayBounds arr idx  = arr ! idx
+    | otherwise              = def
+
+subArray :: Array (Int, Int) a -> ((Int, Int), (Int, Int)) -> Array (Int, Int) a
+subArray arr ((minY, minX), (maxY, maxX)) = listArray ((0, 0), (maxY-minY, maxX-minX)) [arr ! (y, x) | y <- [minY..maxY], x <- [minX..maxX]]
 
 inArrayBounds arr (y, x) = let
     ((h0, w0), (hm, wm)) = bounds arr
